@@ -1,8 +1,23 @@
 import express from 'express';
-import { test } from '../Controllers/userController.js';
+const userRoute = express.Router();
+import {storage} from '../Controllers/cloudinaryStorage.js'
 
-const router = express.Router();
+import multer from 'multer';
 
-router.get('/',test)
+const upload = multer({ storage });
 
-export default router;
+import {signin, signup, signout} from '../Controllers/userController.js';
+import {updateProfile} from '../Controllers/profileController.js';
+
+
+
+userRoute.post('/signup', signup);
+userRoute.post('/signin', signin);
+
+
+userRoute.post('/signout', signout);
+
+userRoute.put("/user/update",upload.single('image') ,updateProfile);
+
+
+export default userRoute;
