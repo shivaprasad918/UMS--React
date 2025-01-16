@@ -24,7 +24,7 @@ const UpdateProfile = ({ toggleModal, user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formDataToSend = new FormData();
     formDataToSend.append("userName", formData.userName);
     formDataToSend.append("email", formData.email);
@@ -32,28 +32,22 @@ const UpdateProfile = ({ toggleModal, user }) => {
     if (formData.image) {
       formDataToSend.append("image", formData.image);
     }
-  console.log(formData.image);
-  
+    console.log(formData.image);
     try {
       const response = await axios.put(
         "http://localhost:3000/api/auth/user/update",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formDataToSend
       );
-      console.log("ghis is resss",response);
-      
-  
+      console.log("Response:", response);
       const updatedUser = response.data;
       dispatch(signinSuccess(updatedUser.user));
-  
       console.log("Profile Updated:", updatedUser);
       toggleModal();
     } catch (err) {
-      console.error(err);
+      console.error("Error occurred:", err);
+      if (err.response) {
+        console.error("Server responded with error:", err.response.data);
+      }
     }
   };
 

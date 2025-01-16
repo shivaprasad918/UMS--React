@@ -1,23 +1,19 @@
 import express from 'express';
 const userRoute = express.Router();
-import {storage} from '../Controllers/cloudinaryStorage.js'
-
+import { storage } from '../Controllers/cloudinaryStorage.js';
+import { signin, signup, signout } from '../Controllers/userController.js';
+import { updateProfile } from '../Controllers/profileController.js';
 import multer from 'multer';
 
-const upload = multer({ storage });
+// Setup Multer for image uploads
+const upload = multer({ storage: storage })
 
-import {signin, signup, signout} from '../Controllers/userController.js';
-import {updateProfile} from '../Controllers/profileController.js';
-
-
-
+// Define routes
 userRoute.post('/signup', signup);
 userRoute.post('/signin', signin);
-
-
 userRoute.post('/signout', signout);
 
-userRoute.put("/user/update",upload.single('image') ,updateProfile);
-
+// Profile update route with image upload
+userRoute.put("/user/update", upload.single('image'), updateProfile);
 
 export default userRoute;

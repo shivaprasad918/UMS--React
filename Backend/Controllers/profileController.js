@@ -6,6 +6,7 @@ export const updateProfile = async (req, res) => {
     const { userName, email, _id } = req.body;
     const data = {};
 
+    // Update fields if they exist in the request body
     if (userName) {
       data.userName = userName;
     }
@@ -13,26 +14,21 @@ export const updateProfile = async (req, res) => {
       data.email = email;
     }
 
-    console.log("file", req.file);
-
-
+    // If the file is uploaded, store the Cloudinary file path
     if (req.file) {
-      data.profilePicture = req.file.path;
+      data.profilePicture = req.file.path; 
     }
 
     console.log("cloudname", process.env.CLOUD_NAME);
     console.log("key", process.env.CLOUDINARY_KEY);
     console.log("secret", process.env.CLOUDINARY_SECRET);
 
-    const updatedUser = await User.findOneAndUpdate({ _id: _id }, data, {
-      new: true,
-    });
+    // Update the user document in the database
+    const updatedUser = await User.findOneAndUpdate({ _id: _id }, data, { new: true });
 
     res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
   } catch (error) {
-  
-    console.log("this is erroorrrrr",error);
-    
-    res.status(500).json({error, message: "Failed to update profile" });
+    console.log("Error occurred while updating profile", error);
+    res.status(500).json({ error, message: "Failed to update profile" });
   }
 };
